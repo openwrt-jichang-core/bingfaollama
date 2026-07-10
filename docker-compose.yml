@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  ollama-scanner:
+    build: .
+    container_name: ollama-scanner
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ollama-scanner-data:/data
+    environment:
+      - DATA_DIR=/data
+
+volumes:
+  ollama-scanner-data:

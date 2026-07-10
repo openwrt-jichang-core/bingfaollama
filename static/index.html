@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ollama 集群扫描台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scanline-overlay" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar__id">
+      <span class="eyebrow">OLLAMA / FLEET SCAN</span>
+      <h1>集群扫描台</h1>
+    </div>
+    <div class="radar" id="radar" aria-hidden="true">
+      <div class="radar__ring radar__ring--1"></div>
+      <div class="radar__ring radar__ring--2"></div>
+      <div class="radar__sweep" id="radarSweep"></div>
+      <div class="radar__core"></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 主机管理面板 -->
+    <section class="panel panel--hosts" aria-labelledby="hostsTitle">
+      <h2 id="hostsTitle" class="panel__title">
+        <span class="panel__index">01</span> 主机地址
+      </h2>
+      <p class="panel__hint">添加任意数量的 Ollama 服务地址，例如 <code>http://192.168.1.10:11434</code>。星标收藏常用地址，关闭开关可临时排除某个地址（不删除，也不参与扫描）。</p>
+
+      <form id="hostForm" class="host-form">
+        <input
+          type="text"
+          id="hostInput"
+          class="host-form__input"
+          placeholder="http://host:11434 或 host:11434"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button type="submit" class="btn btn--add">+ 添加</button>
+      </form>
+
+      <ul id="hostList" class="host-list" aria-live="polite">
+        <!-- 动态渲染 -->
+      </ul>
+      <p id="hostEmpty" class="host-empty">还没有添加任何主机地址。</p>
+    </section>
+
+    <!-- 控制与日志 -->
+    <section class="panel panel--console" aria-labelledby="consoleTitle">
+      <div class="console-head">
+        <h2 id="consoleTitle" class="panel__title">
+          <span class="panel__index">02</span> 扫描控制台
+        </h2>
+        <div class="controls">
+          <span id="statusPill" class="status-pill status-pill--idle">待机</span>
+          <button id="startBtn" class="btn btn--start">▶ 开始扫描</button>
+          <button id="stopBtn" class="btn btn--stop" disabled>■ 停止</button>
+        </div>
+      </div>
+
+      <div class="concurrency">
+        <label for="concurrencyRange" class="concurrency__label">
+          并发数 <span id="concurrencyValue" class="concurrency__value">3</span>
+          <span class="concurrency__hint">— 同时运行的主机数量，每个主机不会被重复运行</span>
+        </label>
+        <div class="concurrency__row">
+          <input type="range" id="concurrencyRange" min="1" max="100" value="3" />
+          <input type="number" id="concurrencyNumber" min="1" max="100" value="3" class="concurrency__number" />
+        </div>
+      </div>
+
+      <div id="log" class="log" role="log" aria-live="polite"></div>
+    </section>
+
+    <!-- 结果面板 -->
+    <section class="panel panel--results" aria-labelledby="resultsTitle">
+      <h2 id="resultsTitle" class="panel__title">
+        <span class="panel__index">03</span> 测试结果
+      </h2>
+      <div id="resultsBody" class="results-body">
+        <p class="results-empty">暂无结果，运行一次扫描后将显示各模型的测试通过情况。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>阶段：发现模型 → 可用性测试 → 高级代码测试</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
